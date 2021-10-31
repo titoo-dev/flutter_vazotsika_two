@@ -1,4 +1,4 @@
-import 'package:flutter_vazotsika_two/app/service/socket_client.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -6,8 +6,13 @@ import 'package:just_audio/just_audio.dart';
 
 class PlayerService extends GetxController {
   // final SocketServer _socketServer = Get.find();
-  final SocketClient _socketClient = Get.find();
   final player = AudioPlayer();
+
+  final List<int> _buffer = [];
+
+  List<int> get buffer => _buffer;
+
+  SongModel? currentSong;
 
   @override
   void dispose() {
@@ -15,14 +20,14 @@ class PlayerService extends GetxController {
     super.dispose();
   }
 
-  void playAudio(String path) {
-    player.setAudioSource(AudioSource.uri(Uri.file(path)));
+  void playAudio(SongModel song) {
+    currentSong = song;
+    player.setAudioSource(AudioSource.uri(Uri.file(song.data)));
     player.play();
   }
 
   void loadDiffusion() {
-    player.setAudioSource(
-        AudioSource.uri(Uri.dataFromBytes(_socketClient.buffer)));
+    player.setAudioSource(AudioSource.uri(Uri.dataFromBytes(_buffer)));
     player.play();
   }
 
