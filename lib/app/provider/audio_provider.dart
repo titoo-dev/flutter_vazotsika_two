@@ -19,10 +19,4 @@ class AudioProvider extends GetxController {
         uriType: UriType.EXTERNAL, ignoreCase: true);
     return _artists;
   }
-
-  @override
-  void onInit() {
-    super.onInit();
-    _onAudioQuery.permissionsRequest();
-  }
 }

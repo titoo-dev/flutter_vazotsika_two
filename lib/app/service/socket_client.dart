@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_vazotsika_two/app/service/player_service.dart';
 import 'package:socket_io_client/socket_io_client.dart'
     show Socket, OptionBuilder, io;
@@ -17,18 +18,20 @@ class SocketClient extends GetxController {
         'http://192.168.43.1:8080',
         OptionBuilder()
             .setTransports(['websocket'])
-            .disableAutoConnect()
+            .enableAutoConnect()
+            .enableReconnection()
             .build());
 
     socket.on('connect', (data) {
       print("Connected");
-      socket.emit("message", "Hello Sever");
+      socket.emit('current_song_request');
     });
 
     socket.on('from server', (data) {
       print("data => $data");
     });
 
+    socket.on('transfert_image', handleStartTransfertImage);
     socket.on('start_transfert', handleStartTransfert);
 
     socket.on('current_position', handlecurrentPosition);
@@ -51,19 +54,29 @@ class SocketClient extends GetxController {
     socket.emit(event, data);
   }
 
-  void handleStartTransfert(data) {
-    print("Getting Transfert");
-    _playerService.buffer.clear();
+  void handleStartTransfertImage(data) {
+    print("Getting Image");
     final List<int> payload = data.cast<int>();
     for (var i = 0; i < payload.length; i++) {
-      _playerService.buffer.add(payload[i]);
+      _playerService.imageBuffer.add(payload[i]);
     }
-    print("transfert ==> $payload");
-    print("Getting Transfert");
+    print(data);
+  }
+
+  void handleStartTransfert(data) {
+    print("Getting Audio");
+    _playerService.audioBuffer.clear();
+    final List<int> payload = data.cast<int>();
+    for (var i = 0; i < payload.length; i++) {
+      _playerService.audioBuffer.add(payload[i]);
+    }
+    print(data);
     socket.emit('transfert_done');
+    update(['streaming_image']);
+    Get.rawSnackbar(messageText: const Text("Ready for streaming"));
   }
 
   void handleTransfertDone(data) async {
-    print("transfert done ! ==> ${_playerService.buffer}");
+    print("transfert done ! ==> ${_playerService.audioBuffer}");
   }
 }

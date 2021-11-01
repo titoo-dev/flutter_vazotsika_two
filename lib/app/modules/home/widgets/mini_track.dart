@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -48,23 +46,26 @@ class MiniTrack extends GetView<HomeController> {
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: GestureDetector(
                   onTap: () => controller.toPlayerPage(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(controller.currentSong!.title,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2
-                              ?.copyWith(fontSize: 16)),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(controller.currentSong!.artist!,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.caption)
-                    ],
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(controller.currentSong!.title,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2
+                                ?.copyWith(fontSize: 16)),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(controller.currentSong!.artist!,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.caption)
+                      ],
+                    ),
                   ),
                 ),
               ),

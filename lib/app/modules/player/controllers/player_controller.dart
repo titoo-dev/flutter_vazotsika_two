@@ -57,6 +57,10 @@ class PlayerController extends GetxController
   void startStreaming() {
     _streamingService.startStream();
     update(['radio_icon']);
+    Get.rawSnackbar(
+        animationDuration: const Duration(milliseconds: 600),
+        messageText: const Text("Server Started",
+            style: TextStyle(color: Colors.white)));
 
     // Start Streaming event
     // playerService.player.positionStream.listen((position) {
@@ -74,6 +78,10 @@ class PlayerController extends GetxController
   void closeStreaming() {
     _streamingService.closeStream();
     update(['radio_icon']);
+    Get.rawSnackbar(
+        animationDuration: const Duration(milliseconds: 600),
+        messageText: const Text("Server Stopped",
+            style: TextStyle(color: Colors.white)));
   }
 
   bool get isStreaming => _streamingService.isStreaming;

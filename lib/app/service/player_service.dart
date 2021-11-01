@@ -1,16 +1,18 @@
+import '../provider/audio_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 
-// import 'socket_server.dart';
-
 class PlayerService extends GetxController {
-  // final SocketServer _socketServer = Get.find();
   final player = AudioPlayer();
+  final AudioProvider provider = Get.find();
 
-  final List<int> _buffer = [];
+  final List<int> _audioBuffer = [];
 
-  List<int> get buffer => _buffer;
+  final List<int> _imageBuffer = [];
+
+  List<int> get imageBuffer => _imageBuffer;
+  List<int> get audioBuffer => _audioBuffer;
 
   SongModel? currentSong;
 
@@ -20,14 +22,18 @@ class PlayerService extends GetxController {
     super.dispose();
   }
 
-  void playAudio(SongModel song) {
+  void playAudio(SongModel song) async {
     currentSong = song;
-    player.setAudioSource(AudioSource.uri(Uri.file(song.data)));
-    player.play();
+    final audioSource =
+        await player.setAudioSource(AudioSource.uri(Uri.file(song.data)));
+
+    if (audioSource != null) {
+      await player.play();
+    }
   }
 
   void loadDiffusion() {
-    player.setAudioSource(AudioSource.uri(Uri.dataFromBytes(_buffer)));
+    player.setAudioSource(AudioSource.uri(Uri.dataFromBytes(_audioBuffer)));
     player.play();
   }
 

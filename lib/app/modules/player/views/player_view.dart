@@ -14,7 +14,6 @@ class PlayerView extends GetView<PlayerController> {
 
   @override
   Widget build(BuildContext context) {
-    final PlayerController playerController = Get.find();
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.only(top: 30),

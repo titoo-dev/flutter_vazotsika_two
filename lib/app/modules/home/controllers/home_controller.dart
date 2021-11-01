@@ -55,7 +55,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   @override
-  void onReady() {
+  void onReady() async {
     super.onReady();
     loadArtistList();
     loadSongList();
@@ -75,7 +75,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
 
   // navigation
   void toPlayerPage() {
-    Get.toNamed(Routes.PLAYER, arguments: currentSong);
+    Get.toNamed(Routes.player, arguments: currentSong);
   }
 
   void handleTapBottomNavabarItem(int index) {

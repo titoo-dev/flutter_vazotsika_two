@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vazotsika_two/app/modules/player/controllers/player_controller.dart';
 import 'package:get/get.dart';
 
-class PlayerControl extends StatelessWidget {
+class PlayerControl extends GetView<PlayerController> {
   const PlayerControl({Key? key}) : super(key: key);
 
   @override
@@ -16,13 +16,14 @@ class PlayerControl extends StatelessWidget {
               onPressed: () => {}, icon: const Icon(Icons.shuffle_rounded)),
           const Spacer(),
           IconButton(
-              onPressed: () => {},
+              onPressed: () => controller.playerService.player.seekToPrevious(),
               icon: const Icon(Icons.skip_previous_outlined)),
           const SizedBox(width: 4),
-          PlayPauseButton(),
+          const PlayPauseButton(),
           const SizedBox(width: 4),
           IconButton(
-              onPressed: () => {}, icon: const Icon(Icons.skip_next_outlined)),
+              onPressed: () => controller.playerService.player.seekToNext(),
+              icon: const Icon(Icons.skip_next_outlined)),
           const Spacer(),
           IconButton(
               onPressed: () => {},

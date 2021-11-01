@@ -7,9 +7,6 @@
         {
             "name": "flutter_vazotsika_two",
             "request": "launch",
-            "args": [
-                "--no-sound-null-safety"
-            ],
             "type": "dart"
         },
         
@@ -17,9 +14,6 @@
             "name": "WAS LX1A",
             "request": "launch",
             "deviceId": "H3XDU17325002029",
-            "args": [
-                "--no-sound-null-safety"
-            ],
             "type": "dart"
         },
 
@@ -27,9 +21,13 @@
             "name": "M5",
             "request": "launch",
             "deviceId": "611YFBQEXWPUQ",
-            "args": [
-                "--no-sound-null-safety"
-            ],
+            "type": "dart"
+        },
+        
+        {
+            "name": "A3 A20",
+            "request": "launch",
+            "deviceId": "RG4PEIPN6SQKRSWW",
             "type": "dart"
         },
 
@@ -45,7 +43,8 @@
             "name": "Compound",
             "configurations": [
                 "WAS LX1A",
-                "M5"
+                "M5",
+                "A3 A20"
             ]
         }
     ]

@@ -5,10 +5,10 @@ abstract class Routes {
   Routes._();
 
   static const home = _Paths.home;
-  static const PLAYER = _Paths.PLAYER;
+  static const player = _Paths.player;
 }
 
 abstract class _Paths {
   static const home = '/home';
-  static const PLAYER = '/player';
+  static const player = '/player';
 }
