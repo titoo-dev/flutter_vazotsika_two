@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 class SocketServer extends GetxController {
   late final Server _io;
   late final dynamic _nsp;
+  final OnAudioQuery _onAudioQuery = Get.find();
 
   SongModel? _currentSong;
 
@@ -61,11 +62,17 @@ class SocketServer extends GetxController {
   void handleCurrentSongRequest(dynamic data) async {
     print("New Current Song Request");
     try {
-      final File file = File(_currentSong!.data);
+      final test = Future<bool>(() async {
+        final File file = File(_currentSong!.data);
+        Uint8List bytes = await file.readAsBytes();
+        final Uint8List? songImage = await _onAudioQuery.queryArtwork(
+            _currentSong!.id, ArtworkType.AUDIO);
 
-      Uint8List bytes = await file.readAsBytes();
-
-      _io.emit('start_transfert', bytes);
+        _io.emit('transfert_image', songImage);
+        _io.emit('start_transfert', bytes);
+        return true;
+      });
+      test.then((value) => {print('La musique à été transferé avec succes')});
     } catch (e) {
       print("Error: $e");
     }
