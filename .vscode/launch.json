@@ -7,16 +7,53 @@
         {
             "name": "flutter_vazotsika_two",
             "request": "launch",
-            "args": [
-                "--no-sound-null-safety"
-            ],
             "type": "dart"
         },
+        
+        {
+            "name": "WAS LX1A",
+            "request": "launch",
+            "deviceId": "H3XDU17325002029",
+            "type": "dart"
+        },
+
+        {
+            "name": "KYV34",
+            "request": "launch",
+            "deviceId": "dce34bd521",
+            "type": "dart"
+        },
+
+        {
+            "name": "M5",
+            "request": "launch",
+            "deviceId": "611YFBQEXWPUQ",
+            "type": "dart"
+        },
+        
+        {
+            "name": "A3 A20",
+            "request": "launch",
+            "deviceId": "RG4PEIPN6SQKRSWW",
+            "type": "dart"
+        },
+
         {
             "name": "flutter_vazotsika_two (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Compound",
+            "configurations": [
+                "WAS LX1A",
+                "M5",
+                "A3 A20",
+                "KYV34"
+            ]
         }
     ]
 }

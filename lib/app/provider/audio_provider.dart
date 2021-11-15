@@ -1,22 +1,25 @@
-import 'dart:typed_data';
-
 import 'package:get/get.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:flutter_audio_query/flutter_audio_query.dart';
+
+import 'package:on_audio_query/on_audio_query.dart';
 
 class AudioProvider extends GetxController {
-  final FlutterAudioQuery _flutterAudioQuery = FlutterAudioQuery();
+  final OnAudioQuery _onAudioQuery = Get.put(OnAudioQuery());
 
-  late List<SongInfo> _songs;
-  late List<ArtistInfo> _artists;
+  late List<SongModel> _songs;
+  late List<ArtistModel> _artists;
 
-  Future<List<SongInfo>> getAllMusic() async {
-    _songs = await _flutterAudioQuery.getSongs();
+  Future<List<SongModel>> getAllMusic() async {
+    _songs = await _onAudioQuery.querySongs(
+        uriType: UriType.EXTERNAL, ignoreCase: true);
     return _songs;
   }
 
-  Future<List<ArtistInfo>> getAllArtist() async {
-    _artists = await _flutterAudioQuery.getArtists();
+  Future<List<ArtistModel>> getAllArtist() async {
+    print("Getting Artist");
+
+    _artists = await _onAudioQuery.queryArtists(
+        uriType: UriType.EXTERNAL, ignoreCase: true);
+
     return _artists;
   }
 }

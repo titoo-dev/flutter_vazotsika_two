@@ -1,11 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:flutter_audio_query/flutter_audio_query.dart';
-
 import 'package:get/get.dart';
-import 'package:just_audio/just_audio.dart';
 
 import '../controllers/home_controller.dart';
+import '../widgets/artist_list.dart';
+import '../widgets/heading_text.dart';
+import '../widgets/music_bottom_sheet.dart';
+import '../widgets/recent_song_grid.dart';
+import 'library_view.dart';
+import 'streaming_view.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
@@ -13,71 +16,36 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: StreamBuilder<ProcessingState>(
-          stream: controller.playerService.player.processingStateStream,
-          builder: (_, snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data! == ProcessingState.ready
-                  ? FloatingActionButton(
-                      onPressed: () => controller.togglePlayPause(),
-                      child: AnimatedIcon(
-                          icon: AnimatedIcons.pause_play,
-                          progress: controller.playingStateAnimation),
-                    )
-                  : Container();
-            }
-            return Container();
+      bottomSheet: const MusicBottomSheet(),
+      bottomNavigationBar: GetBuilder<HomeController>(
+          id: 'bottom_navbar',
+          builder: (_) {
+            return BottomNavigationBar(
+                items: _.bottomNavBaritems,
+                currentIndex: _.tabController.index,
+                onTap: _.handleTapBottomNavabarItem);
           }),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      appBar: AppBar(
-        title: const Text('AudioPlayer'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () => controller.playDiffusion(),
-              icon: const Icon(Icons.radio))
+      body: TabBarView(
+        controller: controller.tabController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: const [
+                HeadingText(),
+                ArtistList(),
+                Divider(
+                  thickness: 1,
+                ),
+                RecentSongGrid()
+              ],
+            ),
+          ),
+          const LibraryView(),
+          const StreamingView()
         ],
       ),
-      body: FutureBuilder<List<SongInfo>>(
-        future: controller.getAllMusic,
-        builder: (_, snapshot) {
-          if (snapshot.hasData) {
-            final songs = snapshot.data;
-            return ListView.builder(
-                itemCount: songs!.length,
-                itemBuilder: (_, i) => SonginfoTile(songInfo: songs[i]));
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
     );
-  }
-}
-
-class SonginfoTile extends GetView<HomeController> {
-  final SongInfo songInfo;
-
-  const SonginfoTile({Key? key, required this.songInfo}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-        onTap: () => controller.playAudio(songInfo.filePath),
-        title: Text(
-          songInfo.title,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Text(
-          songInfo.artist,
-          overflow: TextOverflow.ellipsis,
-        ),
-        trailing: ElevatedButton(
-            onPressed: () => controller.diffuseSong(songInfo: songInfo),
-            child: const Text("Diffuse")),
-        leading: CircleAvatar(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: const Icon(Icons.music_note_outlined)));
   }
 }
