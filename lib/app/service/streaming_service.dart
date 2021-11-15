@@ -10,9 +10,9 @@ class StreamingService extends GetxController {
 
   bool isStreaming = false;
 
-  void setupServerCurrentStreaming(SongModel songInfo) {
-    socketServer.currentSong = songInfo;
-  }
+  // void setupServerCurrentStreaming(SongModel songInfo) {
+  //   socketServer.currentSong = songInfo;
+  // }
 
   bool getClientStatus() {
     return socketclient.isConnected;

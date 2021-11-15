@@ -28,21 +28,32 @@ class PlayerSeekbar extends GetView<PlayerController> {
                 initialData: const Duration(seconds: 0),
                 stream: controller.playerService.player.positionStream,
                 builder: (context, snapshot) {
-                  return Slider(
+                  if (controller.playerService.player.duration != null) {
+                    return Slider(
+                      min: 0,
+                      inactiveColor: Colors.black38,
+                      thumbColor: Colors.black87,
+                      activeColor: Colors.black87,
+                      max: controller.playerService.player.duration!.inSeconds
+                          .toDouble(),
+                      value: snapshot.data!.inSeconds.toDouble(),
+                      onChanged: controller.handleSeek,
+                    );
+                  }
+                  return const Slider(
                     min: 0,
                     inactiveColor: Colors.black38,
                     thumbColor: Colors.black87,
                     activeColor: Colors.black87,
-                    max: controller.playerService.player.duration!.inSeconds
-                        .toDouble(),
-                    value: snapshot.data!.inSeconds.toDouble(),
-                    onChanged: controller.handleSeek,
+                    max: 0,
+                    value: 0,
+                    onChanged: null,
                   );
                 }),
           ),
-          FutureBuilder<Duration?>(
+          StreamBuilder<Duration?>(
               initialData: const Duration(seconds: 0),
-              future: controller.playerService.player.durationFuture,
+              stream: controller.playerService.player.durationStream,
               builder: (_, snapshot) {
                 if (snapshot.hasData) {
                   final duration = snapshot.data.toString().split(':');

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vazotsika_two/app/service/socket_client.dart';
 import '../../../routes/app_pages.dart';
 import '../../../service/streaming_service.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -16,9 +17,14 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   late final AnimationController playingStateAnimation;
   late final AnimationController bottomSheetAnimation;
 
+  late AnimationController _nearbyAnimationController;
+  AnimationController get nearbyAnimationController =>
+      _nearbyAnimationController;
+
   final StreamingService _streamingService = Get.find();
   final AudioProvider _audioProvider = Get.find();
   final PlayerService _playerService = Get.find();
+  final SocketClient _socketClient = Get.find();
 
   List<ArtistModel> artist = [];
   List<SongModel> songs = [];
@@ -34,7 +40,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     const BottomNavigationBarItem(icon: Icon(Icons.radio), label: "Streaming"),
   ];
 
-  SongModel? currentSong;
+  SongModel? get currentSong => _playerService.currentSong;
 
   late final TabController tabController;
 
@@ -52,6 +58,10 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
       ..addListener(() {
         update(['bottom_navbar']);
       });
+
+    _nearbyAnimationController = AnimationController(
+      vsync: this,
+    );
   }
 
   @override
@@ -59,6 +69,14 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     super.onReady();
     loadArtistList();
     loadSongList();
+    startAnimation();
+  }
+
+  void startAnimation() {
+    print("Starting Nearby Animation");
+    _nearbyAnimationController.stop();
+    _nearbyAnimationController.reset();
+    _nearbyAnimationController.repeat(period: const Duration(seconds: 1));
   }
 
   void loadArtistList() async {
@@ -86,9 +104,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   // player
   void playAudio({required SongModel audio}) {
     _playerService.playAudio(audio);
-    currentSong = audio;
-    _streamingService.setupServerCurrentStreaming(audio);
-    update(['bottom_sheet', 'mini_track', 'library_song_tile']);
+    // update(['bottom_sheet', 'library_song_tile']);
   }
 
   void togglePlayPause() {
@@ -101,7 +117,8 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   void playDiffusion() {
-    _playerService.loadDiffusion();
+    _playerService.playDiffusion();
+    playingStateAnimation.forward();
   }
 
   void connectToServer() {
@@ -109,7 +126,20 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   void requestCurrentStreaming() {
-    _streamingService.requestCurrentStreamig();
+    showLoading();
+    _socketClient.socket.emit('current_song_request');
+  }
+
+  void showLoading() {
+    Get.dialog(AlertDialog(
+      content: Row(
+        children: const [
+          CircularProgressIndicator(),
+          SizedBox(width: 14),
+          Text("Fetching Song...")
+        ],
+      ),
+    ));
   }
 
   bool getClientStatus() {

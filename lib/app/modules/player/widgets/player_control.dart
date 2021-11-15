@@ -12,8 +12,7 @@ class PlayerControl extends GetView<PlayerController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          IconButton(
-              onPressed: () => {}, icon: const Icon(Icons.shuffle_rounded)),
+          const IconButton(onPressed: null, icon: Icon(Icons.shuffle_rounded)),
           const Spacer(),
           IconButton(
               onPressed: () => controller.playerService.player.seekToPrevious(),
@@ -25,9 +24,8 @@ class PlayerControl extends GetView<PlayerController> {
               onPressed: () => controller.playerService.player.seekToNext(),
               icon: const Icon(Icons.skip_next_outlined)),
           const Spacer(),
-          IconButton(
-              onPressed: () => {},
-              icon: const Icon(Icons.library_music_outlined)),
+          const IconButton(
+              onPressed: null, icon: Icon(Icons.library_music_outlined)),
         ],
       ),
     );

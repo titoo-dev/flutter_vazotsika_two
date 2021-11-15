@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vazotsika_two/app/service/player_service.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -30,19 +31,23 @@ class LibrarySongListTile extends GetView<HomeController> {
     return StreamBuilder<ProcessingState>(
         stream: controller.playerService.player.processingStateStream,
         builder: (context, snapshot) {
-          return ListTile(
-            tileColor: snapshot.data == ProcessingState.ready &&
-                    controller.currentSong!.id == songInfo.id
-                ? Theme.of(context).primaryColor.withOpacity(0.1)
-                : Colors.transparent,
-            onTap: () => controller.playAudio(audio: songInfo),
-            title: Text(songInfo.title, overflow: TextOverflow.ellipsis),
-            subtitle: Text(
-              songInfo.artist!,
-              overflow: TextOverflow.ellipsis,
-            ),
-            trailing: const Icon(Icons.more_vert_outlined),
-          );
+          return GetBuilder<PlayerService>(
+              id: 'library_list_tile',
+              builder: (state) {
+                return ListTile(
+                  tileColor: snapshot.data == ProcessingState.ready &&
+                          controller.currentSong!.id == songInfo.id
+                      ? Theme.of(context).primaryColor.withOpacity(0.1)
+                      : Colors.transparent,
+                  onTap: () => controller.playAudio(audio: songInfo),
+                  title: Text(songInfo.title, overflow: TextOverflow.ellipsis),
+                  subtitle: Text(
+                    songInfo.artist!,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: const Icon(Icons.more_vert_outlined),
+                );
+              });
         });
   }
 }

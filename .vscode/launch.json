@@ -18,6 +18,13 @@
         },
 
         {
+            "name": "KYV34",
+            "request": "launch",
+            "deviceId": "dce34bd521",
+            "type": "dart"
+        },
+
+        {
             "name": "M5",
             "request": "launch",
             "deviceId": "611YFBQEXWPUQ",
@@ -44,7 +51,8 @@
             "configurations": [
                 "WAS LX1A",
                 "M5",
-                "A3 A20"
+                "A3 A20",
+                "KYV34"
             ]
         }
     ]

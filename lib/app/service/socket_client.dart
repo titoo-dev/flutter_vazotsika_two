@@ -12,6 +12,8 @@ class SocketClient extends GetxController {
   late final Socket socket;
   List<Uint8List> playlist = [];
 
+  RxBool isJoined = false.obs;
+
   void init() {
     print("initialisation client");
     socket = io(
@@ -24,7 +26,13 @@ class SocketClient extends GetxController {
 
     socket.on('connect', (data) {
       print("Connected");
-      socket.emit('current_song_request');
+      isJoined.value = true;
+    });
+
+    socket.on('disconnect', (data) {
+      print("disconnected");
+      isJoined.value = false;
+      _playerService.player.stop();
     });
 
     socket.on('from server', (data) {
@@ -50,6 +58,10 @@ class SocketClient extends GetxController {
     socket.connect();
   }
 
+  void close() {
+    socket.close();
+  }
+
   void request(String event, [dynamic data]) {
     socket.emit(event, data);
   }
@@ -71,9 +83,15 @@ class SocketClient extends GetxController {
       _playerService.audioBuffer.add(payload[i]);
     }
     print(data);
-    socket.emit('transfert_done');
+    _playerService.loadDiffusion();
     update(['streaming_image']);
-    Get.rawSnackbar(messageText: const Text("Ready for streaming"));
+    Get.back();
+    Get.rawSnackbar(
+        messageText: const Text(
+      "Ready for streaming",
+      style: TextStyle(color: Colors.white),
+    ));
+    socket.emit('transfert_done');
   }
 
   void handleTransfertDone(data) async {

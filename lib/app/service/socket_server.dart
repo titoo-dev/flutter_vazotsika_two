@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter_vazotsika_two/app/service/player_service.dart';
+import 'package:flutter_vazotsika_two/app/service/socket_client.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:socket_io/socket_io.dart';
 import 'package:get/get.dart';
@@ -9,13 +11,15 @@ class SocketServer extends GetxController {
   late final Server _io;
   late final dynamic _nsp;
   final OnAudioQuery _onAudioQuery = Get.find();
+  final PlayerService _playerService = Get.find();
+  final SocketClient _socketClient = Get.find();
 
-  SongModel? _currentSong;
+  SongModel? get currentSong => _playerService.currentSong;
 
   Server get io => _io;
   dynamic get nsp => _nsp;
 
-  set currentSong(SongModel value) => _currentSong = value;
+  // set currentSong(SongModel value) => _currentSong = value;
 
   @override
   void onInit() {
@@ -37,11 +41,13 @@ class SocketServer extends GetxController {
 
       client.on('transfert_done', (data) {
         print("Transfert done");
+        _io.emit('current_position', _playerService.player.position.inSeconds);
       });
     });
   }
 
   void listen() async {
+    _socketClient.close();
     await _io.listen(8080);
   }
 
@@ -55,26 +61,20 @@ class SocketServer extends GetxController {
     _io.emit(event, data);
   }
 
-  void startStream({required dynamic data}) {
-    _io.emit('from server', data);
-  }
-
   void handleCurrentSongRequest(dynamic data) async {
     print("New Current Song Request");
-    try {
-      final test = Future<bool>(() async {
-        final File file = File(_currentSong!.data);
+    if (currentSong != null) {
+      try {
+        final File file = File(currentSong!.data);
         Uint8List bytes = await file.readAsBytes();
         final Uint8List? songImage = await _onAudioQuery.queryArtwork(
-            _currentSong!.id, ArtworkType.AUDIO);
+            currentSong!.id, ArtworkType.AUDIO);
 
         _io.emit('transfert_image', songImage);
         _io.emit('start_transfert', bytes);
-        return true;
-      });
-      test.then((value) => {print('La musique à été transferé avec succes')});
-    } catch (e) {
-      print("Error: $e");
+      } catch (e) {
+        print("Error: $e");
+      }
     }
   }
 

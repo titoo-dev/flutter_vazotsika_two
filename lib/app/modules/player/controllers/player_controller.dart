@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vazotsika_two/app/service/socket_server.dart';
 import '../../../service/player_service.dart';
 import '../../../service/streaming_service.dart';
 import 'package:get/get.dart';
@@ -14,13 +15,13 @@ class PlayerController extends GetxController
 
   PlayerService get playerService => _playerService;
 
-  SongModel? currentSong;
+  SongModel? get currentSong => _playerService.currentSong;
+
+  final SocketServer socketServer = Get.find();
 
   @override
   void onInit() {
     super.onInit();
-    currentSong = Get.arguments;
-    print(currentSong);
     playingStateAnimation = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 400));
   }
@@ -63,16 +64,16 @@ class PlayerController extends GetxController
             style: TextStyle(color: Colors.white)));
 
     // Start Streaming event
-    // playerService.player.positionStream.listen((position) {
-    //   if (position.inSeconds % 10 == 0) {
-    //     _streamingService.emitEvent('current_position', position.inSeconds);
-    //   }
-    // });
+    playerService.player.positionStream.listen((position) {
+      if (position.inSeconds % 10 == 0) {
+        _streamingService.emitEvent('current_position', position.inSeconds);
+      }
+    });
   }
 
   void sharePosition() {
     _streamingService.emitEvent(
-        'current_position', playerService.player.position.inMilliseconds);
+        'current_position', playerService.player.position.inMilliseconds + 90);
   }
 
   void closeStreaming() {

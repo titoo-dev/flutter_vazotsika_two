@@ -15,7 +15,9 @@ class PlayerToolbar extends GetView<PlayerController> {
         children: [
           IconButton(
               onPressed: () => controller.back(),
-              icon: const Icon(Icons.arrow_back_outlined)),
+              icon: const Icon(
+                Icons.arrow_back_outlined,
+              )),
           IconButton(
               onPressed: () => {}, icon: const Icon(Icons.more_horiz_outlined)),
         ],

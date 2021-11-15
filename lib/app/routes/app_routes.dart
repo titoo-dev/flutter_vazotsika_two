@@ -6,9 +6,13 @@ abstract class Routes {
 
   static const home = _Paths.home;
   static const player = _Paths.player;
+  static const onBoarding = _Paths.onBoarding;
+  static const AUTHENTICATION = _Paths.AUTHENTICATION;
 }
 
 abstract class _Paths {
   static const home = '/home';
   static const player = '/player';
+  static const onBoarding = '/on-boarding';
+  static const AUTHENTICATION = '/authentication';
 }

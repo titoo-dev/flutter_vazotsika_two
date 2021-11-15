@@ -15,8 +15,11 @@ class AudioProvider extends GetxController {
   }
 
   Future<List<ArtistModel>> getAllArtist() async {
+    print("Getting Artist");
+
     _artists = await _onAudioQuery.queryArtists(
         uriType: UriType.EXTERNAL, ignoreCase: true);
+
     return _artists;
   }
 }
